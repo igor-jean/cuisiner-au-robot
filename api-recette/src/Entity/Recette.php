@@ -15,7 +15,7 @@ use Symfony\Component\Serializer\Attribute\Groups;
 
 #[ORM\Entity(repositoryClass: RecetteRepository::class)]
 #[ApiResource]
-#[ApiFilter(SearchFilter::class, properties: ['robot' => 'exact', 'categorie' => 'exact'])]
+#[ApiFilter(SearchFilter::class, properties: ['robot' => 'exact', 'categorie' => 'exact', 'ingredientPourRecettes' => 'exact'])]
 class Recette
 {
     #[ORM\Id]

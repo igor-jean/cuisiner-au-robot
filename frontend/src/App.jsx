@@ -3,8 +3,6 @@ import { createBrowserRouter, RouterProvider } from 'react-router-dom'
 import Home from './components/Home'
 import Recherche from './components/Recherche'
 import RobotChoisi from './components/recherche-components/RobotChoisi'
-import Categories from './components/recherche-components/Categories'
-import ListeRecette from './components/recherche-components/ListeRecette'
 
 function App() {
 
@@ -18,16 +16,8 @@ function App() {
       element: <Recherche/>,
       children: [
         {
-        path: ':id',
+        path: ':robot',
         element: <RobotChoisi/>
-      },
-      {
-        path: 'robot/:robot/categories',
-        element: <Categories/>,
-      },
-      {
-        path: 'robot/:robot/categories/recherche/:categorie',
-        element: <ListeRecette/>,
       }
     ]
     }  

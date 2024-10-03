@@ -2,20 +2,20 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 
-const ListeRecette = () => {
-    const {robot, categorie} = useParams()
+// eslint-disable-next-line react/prop-types
+const ListeRecette = ({filters}) => {
+    const {robot} = useParams()
     const [listeRecette, setListeRecette] = useState()
 
     useEffect(()=> {
-        axios.get('http://localhost:8000/api/recettes?robot='+robot+'&categorie='+categorie)
+        axios.get('http://localhost:8000/api/recettes?robot='+robot+"&"+filters)
             .then(r=> {
                 setListeRecette(r.data.member)
             })
-    }, [robot, categorie])
+    }, [robot, filters])
 
     return (
         <div>
-            <p>Liste des recettes pour le robot {robot} et la categorie {categorie} </p>
             {
                 listeRecette ?
                 listeRecette.map((recette)=> (
@@ -23,7 +23,7 @@ const ListeRecette = () => {
                         <div className="bg"></div>
                         <div className="blob"></div>
                         <div className="overflow">
-                            <img src={`/build/images/`} alt="photo de " style={{width:"100%"}} />
+                            <img src="" alt="photo de " style={{width:"100%"}} />
                         </div>
                         <div className="deroulement">
                             <h4>{recette.titre}</h4>
