@@ -521,3 +521,66 @@ header {
         }
     }
 }
+
+.filtre-liste-flex {
+    display: grid;
+    grid-template-columns: 20% 70%;
+    gap: 50px;
+    margin: 100px 0;
+}
+
+.filters {
+    border: 2px solid #F74B4B;
+    padding-left: 30px;
+    padding-top: 30px;
+    position: relative;
+
+    &::after {
+        content: "Filtres";
+        color: #F74B4B;
+        font-weight: bold;
+        padding: 10px 15px;
+        position: absolute;
+        top: -50px;
+        left: 30px;
+        font-size: 2rem;
+    }
+
+    h3 {
+        color: #F74B4B;
+        margin: 20px 0;
+    }
+
+    ul {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .inactive-item {
+        cursor: pointer;
+
+        &:hover {
+            font-weight: bold;
+        }
+    }
+
+    .active-item {
+        color: #F74B4B;
+        position: relative;
+        text-indent: 15px;
+        font-weight: bold;
+
+        &::after {
+            content: "";
+            width: 6px;
+            height: 6px;
+            border: 1px solid black;
+            border-radius: 2px;
+            background-color: #F74B4B;
+            position: absolute;
+            left: 2px;
+            bottom: 5px;
+        }
+    }
+
+}

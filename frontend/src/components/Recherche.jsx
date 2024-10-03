@@ -41,9 +41,7 @@ const Recherche = () => {
                 </div>
             </div>
             <ChoixDuRobot/>
-            <div className="container">
-                <Outlet/>
-            </div>
+            <Outlet/>
         </div>
     );
 };

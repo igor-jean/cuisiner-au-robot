@@ -6,7 +6,7 @@ const RobotChoisi = () => {
     const [filters, setFilters] = useState("")
 
     return (
-        <div>
+        <div className="filtre-liste-flex">
             <FiltresRecherche setFilters={setFilters}/>
             <ListeRecette filters={filters}/>
         </div>

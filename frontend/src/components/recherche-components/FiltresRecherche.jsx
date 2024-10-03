@@ -7,6 +7,8 @@ const FiltresRecherche = ({setFilters}) => {
     const [dataIngredients, setDataIngredients] = useState([])
     const [selectedCategories, setSelectedCategories] = useState([])
     const [selectedIngredients, setSelectedIngredients] = useState([])
+    const [titre, setTitre] = useState("")
+    const [selectedDifficulte, setSelectedDifficulte] = useState([])
 
     useEffect(()=> {
         const fetchData = async () => {
@@ -19,6 +21,20 @@ const FiltresRecherche = ({setFilters}) => {
         }
         fetchData()
     }, [])
+
+    const inputSearchFilter = () => {
+        setFilters(prevFilters => {
+            let updatedFilters = new URLSearchParams(prevFilters);
+            if (!updatedFilters.getAll('titre').includes(titre.toString())) {
+
+                updatedFilters.append('titre', titre);
+            }else {
+                updatedFilters.delete('titre', titre)
+            }
+
+            return `${updatedFilters.toString()}&`;
+        })
+    }
 
     const addFiltersCategorie = (categorieId) => {
         setSelectedCategories(prevSelected => {
@@ -69,25 +85,61 @@ const FiltresRecherche = ({setFilters}) => {
         });
     };
     
+    const addDifficulte = (difficulte) => {
+        setSelectedDifficulte(prevSelected => {
+            if(prevSelected.includes(difficulte)) {
+                return prevSelected.filter(id=>id!=difficulte)
+            }else {
+                return [...prevSelected, difficulte]
+            }
+        })
+
+        setFilters(prevFilters => {
+            let updatedFilters = new URLSearchParams(prevFilters);
+    
+            // Vérifie si l'ingrédient est déjà présent
+            if (!updatedFilters.getAll('difficulte[]').includes(difficulte.toString())) {
+                // Ajoute le nouvel ingrédient dans le tableau 'ingredient[]'
+                updatedFilters.append('difficulte[]', difficulte);
+            } else {
+                updatedFilters.delete('difficulte[]', difficulte)
+            }
+    
+            return `${updatedFilters.toString()}&`;
+        });
+    };
+
 
 
     return (
-        <div>
+        <div className='filters'>
+            <button onClick={()=>{setFilters(""); setSelectedCategories([]); setSelectedIngredients([]); setTitre("")}}>Réinitialiser les filtres</button>
+            <input type="text" placeholder='Recherche par mot-clé' onChange={(e)=>setTitre(e.target.value)} value={titre}/>
+            <button onClick={inputSearchFilter}>Rechercher</button>
             <h3>Catégories</h3>
             <ul>
                 {
                     dataCategories.map((categorie)=> (
-                        <li key={categorie.id} style={{ color: selectedCategories.includes(categorie.id) ? 'red' : 'black' }} onClick={()=>addFiltersCategorie(categorie.id)}>{categorie.nom}</li>
+                        <li key={categorie.id} className={ selectedCategories.includes(categorie.id) ? 'active-item' : 'inactive-item' } onClick={()=>addFiltersCategorie(categorie.id)}>{categorie.nom}</li>
                     ))
                 }
             </ul>
             <h3>Ingredients</h3>
             {
                     dataIngredients.map((ingredient)=> (
-                        <li key={ingredient.id} style={{ color: selectedIngredients.includes(ingredient.id) ? 'red' : 'black' }} onClick={()=>addFiltersIngredients(ingredient.id)}>{ingredient.nom}</li>
+                        <li key={ingredient.id} className={ selectedIngredients.includes(ingredient.id) ? 'active-item' : 'inactive-item' } onClick={()=>addFiltersIngredients(ingredient.id)}>{ingredient.nom}</li>
                     ))
             }
-            <button onClick={()=>{setFilters(""); setSelectedCategories([]); setSelectedIngredients([])}}>Reset filtre</button>
+            <h3>Difficulté</h3>
+            <ul>
+                <li className={ selectedDifficulte.includes('1') ? 'active-item' : 'inactive-item' } onClick={()=>addDifficulte("1")}>1</li>
+                <li className={ selectedDifficulte.includes('2') ? 'active-item' : 'inactive-item' } onClick={()=>addDifficulte("2")}>2</li>
+                <li className={ selectedDifficulte.includes('3') ? 'active-item' : 'inactive-item' } onClick={()=>addDifficulte("3")}>3</li>
+                <li className={ selectedDifficulte.includes('4') ? 'active-item' : 'inactive-item' } onClick={()=>addDifficulte("4")}>4</li>
+                <li className={ selectedDifficulte.includes('5') ? 'active-item' : 'inactive-item' } onClick={()=>addDifficulte("5")}>5</li>
+            </ul>
+            <h3>Prêt en ...</h3>
+            <input type="range" name="" id="" />
         </div>
     );
 };
