@@ -17,7 +17,8 @@ class AppFixtures extends Fixture
 {
     public function load(ObjectManager $manager): void
     {
-        $faker = Factory::create('fr_FR');
+        $faker = Factory::create();
+        $faker->addProvider(new \FakerRestaurant\Provider\fr_FR\Restaurant($faker));
 
         // Créer des catégories
         $categories = [];
@@ -31,11 +32,11 @@ class AppFixtures extends Fixture
 
         // Créer des robots
         $robots = [];
-        $nomsRobots = ['Cookeo', 'Thermomix'];
+        $nomsRobots = ['Cookeo', 'Thermomix', "Magimix", "Moulinex", "Kenwood", "CompactCook"];
         foreach ($nomsRobots as $nomRobot) {
             $robot = new Robot();
             $robot->setNom($nomRobot)
-                ->setImageUrl($faker->imageUrl());
+                ->setImageUrl("cookeo_image_url.jpg");
             $manager->persist($robot);
             $robots[] = $robot;
         }
@@ -43,7 +44,7 @@ class AppFixtures extends Fixture
         // Créer des recettes
         for ($i = 0; $i < 10; $i++) {
             $recette = new Recette();
-            $recette->setTitre($faker->sentence(3))
+            $recette->setTitre($faker->foodName())
                 ->setDescription($faker->paragraph())
                 ->setTempsPreparation($faker->numberBetween(10, 60))
                 ->setTempsCuisson($faker->numberBetween(10, 120))
@@ -58,7 +59,7 @@ class AppFixtures extends Fixture
             // Créer des ingrédients pour chaque recette
             for ($j = 0; $j < 5; $j++) {
                 $ingredient = new Ingredient();
-                $ingredient->setNom($faker->word());
+                $ingredient->setNom($faker->vegetableName());
                 $manager->persist($ingredient);
 
                 $ingredientRecette = new IngredientPourRecette();
