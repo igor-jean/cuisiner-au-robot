@@ -23,7 +23,7 @@ const ListeRecette = ({filters}) => {
                         <div className="bg"></div>
                         <div className="blob"></div>
                         <div className="overflow">
-                            <img src="" alt="photo de " style={{width:"100%"}} />
+                            <img src={"../src/assets/img/"+recette.image_url} alt="photo de " style={{width:"100%"}} />
                         </div>
                         <div className="deroulement">
                             <h4>{recette.titre}</h4>
