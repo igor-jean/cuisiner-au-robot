@@ -1,5 +1,8 @@
 import axios from 'axios';
 import { useEffect, useState } from 'react';
+import TextField from '@mui/material/TextField';
+import Stack from '@mui/material/Stack';
+import Autocomplete from '@mui/material/Autocomplete';
 
 // eslint-disable-next-line react/prop-types
 const FiltresRecherche = ({setFilters}) => {
@@ -61,12 +64,15 @@ const FiltresRecherche = ({setFilters}) => {
     };
     
 
-    const addFiltersIngredients = (ingredientId) => {
+    const addFiltersIngredients = (ingredientName) => {
+        const ingredient = dataIngredients.find(item => item.nom === ingredientName);
+        if (!ingredient) return;
+
         setSelectedIngredients(prevSelected => {
-            if(prevSelected.includes(ingredientId)) {
-                return prevSelected.filter(id=>id!=ingredientId)
-            }else {
-                return [...prevSelected, ingredientId]
+            if (prevSelected.includes(ingredient.id)) {
+                return prevSelected.filter(id => id != ingredient.id);
+            } else {
+                return [...prevSelected, ingredient.id];
             }
         })
 
@@ -74,11 +80,11 @@ const FiltresRecherche = ({setFilters}) => {
             let updatedFilters = new URLSearchParams(prevFilters);
     
             // Vérifie si l'ingrédient est déjà présent
-            if (!updatedFilters.getAll('ingredientPourRecettes[]').includes(ingredientId.toString())) {
+            if (!updatedFilters.getAll('ingredientPourRecettes[]').includes(ingredient.id.toString())) {
                 // Ajoute le nouvel ingrédient dans le tableau 'ingredient[]'
-                updatedFilters.append('ingredientPourRecettes[]', ingredientId);
+                updatedFilters.append('ingredientPourRecettes[]', ingredient.id);
             } else {
-                updatedFilters.delete('ingredientPourRecettes[]', ingredientId)
+                updatedFilters.delete('ingredientPourRecettes[]', ingredient.id)
             }
     
             return `${updatedFilters.toString()}&`;
@@ -126,11 +132,35 @@ const FiltresRecherche = ({setFilters}) => {
             </ul>
             <h3>Ingredients</h3>
             {
-                    dataIngredients.map((ingredient)=> (
-                        <li key={ingredient.id} className={ selectedIngredients.includes(ingredient.id) ? 'active-item' : 'inactive-item' } onClick={()=>addFiltersIngredients(ingredient.id)}>{ingredient.nom}</li>
-                    ))
+                    // dataIngredients.map((ingredient)=> (
+                    //     <li key={ingredient.id} className={ selectedIngredients.includes(ingredient.id) ? 'active-item' : 'inactive-item' } onClick={()=>addFiltersIngredients(ingredient.id)}>{ingredient.nom}</li>
+                    // ))
+
+                    
+                    <Stack spacing={2} sx={{ width: 300 }}>
+                        <Autocomplete
+                            freeSolo
+                            id="free-solo-2-demo"
+                            disableClearable
+                            options={dataIngredients.map((option) => option.nom)}
+                            onChange={(event, value) => addFiltersIngredients(value)}
+                            renderInput={(params) => (
+                            <TextField
+                                {...params}
+                                label="Rechercher un ingredient"
+                                slotProps={{
+                                input: {
+                                    ...params.InputProps,
+                                    type: 'search',
+                                },
+                                }}
+                            />
+                            )}
+                        />
+                    </Stack>
             }
             <h3>Difficulté</h3>
+            <input type="range" min="20" max="100" step="20" onChange={(e)=>addDifficulte(e.target.value)} />
             <ul>
                 <li className={ selectedDifficulte.includes('1') ? 'active-item' : 'inactive-item' } onClick={()=>addDifficulte("1")}>1</li>
                 <li className={ selectedDifficulte.includes('2') ? 'active-item' : 'inactive-item' } onClick={()=>addDifficulte("2")}>2</li>
@@ -139,7 +169,6 @@ const FiltresRecherche = ({setFilters}) => {
                 <li className={ selectedDifficulte.includes('5') ? 'active-item' : 'inactive-item' } onClick={()=>addDifficulte("5")}>5</li>
             </ul>
             <h3>Prêt en ...</h3>
-            <input type="range" name="" id="" />
         </div>
     );
 };

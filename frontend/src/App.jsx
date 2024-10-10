@@ -3,6 +3,7 @@ import { createBrowserRouter, RouterProvider } from 'react-router-dom'
 import Home from './components/Home'
 import Recherche from './components/Recherche'
 import RobotChoisi from './components/recherche-components/RobotChoisi'
+import Login from './components/login/login'
 
 function App() {
 
@@ -20,7 +21,11 @@ function App() {
         element: <RobotChoisi/>
       }
     ]
-    }  
+    },
+    {
+      path: '/login',
+      element: <Login/>,
+    },
   ])
 
 
