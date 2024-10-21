@@ -28,6 +28,7 @@ class UserController extends AbstractController
             'email' => $user->getEmail(),
             'nom' => $user->getNom(),
             'prenom' => $user->getPrenom(),
+            'avatar_url' => $user->getAvatarUrl(),
         ]);
     }
 }
