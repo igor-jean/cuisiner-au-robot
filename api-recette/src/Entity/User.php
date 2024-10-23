@@ -2,13 +2,30 @@
 
 namespace App\Entity;
 
-use App\Repository\UserRepository;
+use ApiPlatform\Metadata\Post;
+use Doctrine\DBAL\Types\Types;
+use ApiPlatform\Metadata\Delete;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
+use App\Repository\UserRepository;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\UniqueConstraint(name: 'UNIQ_IDENTIFIER_EMAIL', fields: ['email'])]
+#[ApiResource(
+    operations: [
+        new Post(
+            uriTemplate: '/favoris/{recetteId}',
+            controller: UserController::class . '::addFavori',
+            security: "is_granted('IS_AUTHENTICATED_FULLY')"
+        ),
+        new Delete(
+            uriTemplate: '/favoris/{recetteId}',
+            controller: UserController::class . '::removeFavori',
+            security: "is_granted('IS_AUTHENTICATED_FULLY')"
+        ),
+    ]
+)]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
@@ -39,6 +56,15 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $avatar_url = null;
+
+    #[ORM\Column(type: Types::JSON, nullable: true)]
+    private ?array $favoris = [];
+
+    public function __construct()
+    {
+        $this->favoris = []; // Initialisation du tableau favoris
+    }
+
 
     public function getId(): ?int
     {
@@ -146,6 +172,27 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setAvatarUrl(?string $avatar_url): static
     {
         $this->avatar_url = $avatar_url;
+
+        return $this;
+    }
+
+    public function getFavoris(): ?array
+    {
+        return $this->favoris;
+    }
+
+    public function addFavori(int $recetteId): self
+    {
+        if (!in_array($recetteId, $this->favoris, true)) {
+            $this->favoris[] = $recetteId;
+        }
+
+        return $this;
+    }
+
+    public function removeFavori(int $recetteId): self
+    {
+        $this->favoris = array_filter($this->favoris, fn($id) => $id !== $recetteId);
 
         return $this;
     }
