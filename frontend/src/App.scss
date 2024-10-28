@@ -46,6 +46,11 @@ h6 {
   }
 }
 
+.error-message {
+  text-align: center;
+  color: red;
+}
+
 .card-container {
   display: grid;
   grid-template-columns: repeat(3, 1fr);

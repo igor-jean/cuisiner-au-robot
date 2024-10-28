@@ -36,7 +36,9 @@ class ApiError extends Error {
     if (status === 401) {
       localStorage.removeItem("jwtToken"); // Suppression du token JWT
       localStorage.removeItem("account"); // Suppression de l'utilisateur
-      window.location.reload(); // Rechargement pour forcer l'authentification
+      setTimeout(() => {
+        window.location.reload(); // Rechargement pour forcer l'authentification
+      }, 2000);
     }
     super(`API Error: ${status}`);
   }
